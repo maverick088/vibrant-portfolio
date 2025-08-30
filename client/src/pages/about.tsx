@@ -1,5 +1,5 @@
 import { Link } from 'wouter';
-import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 export default function About() {
   const newsItems = [
@@ -42,11 +42,9 @@ export default function About() {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link href="/">
-            <a className="flex items-center gap-2 hover:opacity-70 transition-opacity" data-testid="back-home">
-              <ArrowLeft className="w-5 h-5" />
-              <span className="font-semibold">Home</span>
-            </a>
+          <Link href="/" className="flex items-center gap-2 hover:opacity-70 transition-opacity" data-testid="back-home">
+            <ArrowLeft className="w-5 h-5" />
+            <span className="font-semibold">Home</span>
           </Link>
           <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
             <span className="text-primary-foreground font-black text-xl">A</span>
@@ -118,14 +116,13 @@ export default function About() {
               {projects.map((project, index) => (
                 <div 
                   key={index}
-                  className="flex items-center justify-between p-4 bg-card rounded-2xl hover:bg-secondary transition-colors"
+                  className="p-4 bg-card rounded-2xl"
                   data-testid={`project-${index}`}
                 >
                   <div>
                     <h3 className="font-semibold">{project.name}</h3>
                     <p className="text-sm text-muted-foreground">{project.period}</p>
                   </div>
-                  <ExternalLink className="w-5 h-5 text-muted-foreground" />
                 </div>
               ))}
             </div>
