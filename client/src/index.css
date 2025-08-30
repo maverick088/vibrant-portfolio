@@ -4,34 +4,42 @@
 @tailwind utilities;
 
 :root {
-  /* Spencer Gabor inspired color palette */
-  --background: hsl(36, 32%, 93%); /* Warm beige/cream background */
-  --foreground: hsl(0, 0%, 10%); /* Near black for text */
-  --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(0, 0%, 10%);
-  --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(0, 0%, 10%);
-  --primary: hsl(17, 100%, 64%); /* Orange/coral accent */
-  --primary-foreground: hsl(0, 0%, 100%);
-  --secondary: hsl(36, 32%, 88%); /* Lighter beige */
-  --secondary-foreground: hsl(0, 0%, 10%);
-  --muted: hsl(36, 20%, 70%);
-  --muted-foreground: hsl(0, 0%, 35%);
-  --accent: hsl(17, 100%, 64%);
-  --accent-foreground: hsl(0, 0%, 100%);
-  --destructive: hsl(0, 84%, 60%);
-  --destructive-foreground: hsl(0, 0%, 98%);
-  --border: hsl(36, 20%, 85%);
-  --input: hsl(36, 20%, 85%);
-  --ring: hsl(17, 100%, 64%);
+  /* Default theme - Warm Beige */
+  --background: #ede6d3;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a1a;
+  --primary: #ff6b35;
+  --primary-foreground: #ffffff;
+  --secondary: #e8dcc4;
+  --secondary-foreground: #1a1a1a;
+  --muted: #b8a890;
+  --muted-foreground: #5a5a5a;
+  --accent: #ff6b35;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #d9ceb8;
+  --input: #d9ceb8;
+  --ring: #ff6b35;
   
-  /* Card colors inspired by colorful project cards */
-  --card-green: hsl(120, 40%, 75%);
-  --card-blue: hsl(210, 60%, 75%);
-  --card-coral: hsl(17, 70%, 70%);
-  --card-purple: hsl(270, 50%, 75%);
-  --card-yellow: hsl(50, 70%, 75%);
-  --card-mint: hsl(160, 40%, 75%);
+  /* Card colors - will be overridden by theme */
+  --card-color-1: #b8d4b8;
+  --card-color-2: #adc3e0;
+  --card-color-3: #e8a598;
+  --card-color-4: #c4a7d8;
+  --card-color-5: #f0d674;
+  --card-color-6: #98d4c4;
+  
+  /* Legacy card color names for compatibility */
+  --card-green: var(--card-color-1);
+  --card-blue: var(--card-color-2);
+  --card-coral: var(--card-color-3);
+  --card-purple: var(--card-color-4);
+  --card-yellow: var(--card-color-5);
+  --card-mint: var(--card-color-6);
   
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
   --font-serif: Georgia, serif;

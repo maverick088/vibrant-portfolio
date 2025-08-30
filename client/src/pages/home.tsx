@@ -1,43 +1,45 @@
-import { Mail, MapPin, ExternalLink, ArrowRight } from "lucide-react";
-import { useState } from "react";
+import { Mail, MapPin, ExternalLink, User } from "lucide-react";
+import { Link } from "wouter";
+import ExperienceCarousel from "@/components/ExperienceCarousel";
+import ThemeSwitcher from "@/components/ThemeSwitcher";
 
-// Experience data with colorful card assignments
+// Experience data for carousel
 const experiences = [
   {
     company: "AngelOne",
     role: "Software Engineer 2",
     period: "2024 - Present",
     rating: 95,
-    color: "card-coral",
     highlights: [
       "Built analytics platform for 190K+ users",
       "Improved Core Web Vitals by 41%",
-      "Led Svelte 5 migration"
-    ]
+      "Led Svelte 5 migration for 10+ modules"
+    ],
+    index: 0
   },
   {
     company: "Innovaccer",
     role: "Software Engineer 2",
     period: "2021 - 2024",
     rating: 88,
-    color: "card-blue",
     highlights: [
-      "Led PRM tool development",
-      "Built Smart Assist with OpenAI",
-      "Mentored 2 developers"
-    ]
+      "Led PRM tool development end-to-end",
+      "Built Smart Assist with OpenAI APIs",
+      "Mentored 2 developers with comprehensive training"
+    ],
+    index: 1
   },
   {
     company: "Internshala",
     role: "Software Developer",
     period: "2020 - 2021",
     rating: 82,
-    color: "card-green",
     highlights: [
-      "Developed JOS product (5% revenue)",
-      "Increased enrollment by 22.56%",
-      "Boosted certificate shares to 45.62%"
-    ]
+      "Developed JOS product contributing 5% revenue",
+      "Increased enrollment rates by 22.56%",
+      "Boosted certificate shares from 30% to 45.62%"
+    ],
+    index: 2
   }
 ];
 
@@ -62,8 +64,6 @@ const projectCards = [
 ];
 
 export default function Home() {
-  const [activeSection, setActiveSection] = useState("work");
-
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -72,13 +72,19 @@ export default function Home() {
           <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
             <span className="text-primary-foreground font-black text-xl">A</span>
           </div>
-          <a 
-            href="mailto:ianujsingh088@gmail.com"
-            className="btn-primary"
-            data-testid="nav-cta"
-          >
-            Get In Touch
-          </a>
+          <div className="flex items-center gap-4">
+            <Link href="/about" className="flex items-center gap-2 px-4 py-2 hover:bg-secondary rounded-full transition-colors" data-testid="nav-about">
+              <User className="w-4 h-4" />
+              <span className="font-medium">About</span>
+            </Link>
+            <a 
+              href="mailto:ianujsingh088@gmail.com"
+              className="btn-primary"
+              data-testid="nav-cta"
+            >
+              Get In Touch
+            </a>
+          </div>
         </div>
       </nav>
 
@@ -144,42 +150,13 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Work Section */}
+      {/* Featured Work Section with Carousel */}
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
           <h3 className="text-4xl md:text-5xl heading-bold mb-4">Featured Work</h3>
-          <p className="text-muted-foreground mb-12">Select recent and notable projects</p>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {experiences.map((exp, index) => (
-              <div 
-                key={index}
-                className={`card-minimal ${exp.color} p-8 cursor-pointer group`}
-                data-testid={`experience-card-${exp.company.toLowerCase()}`}
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h4 className="text-2xl font-black mb-1">{exp.company}</h4>
-                    <p className="text-sm font-medium opacity-80">{exp.role}</p>
-                    <p className="text-xs opacity-60">{exp.period}</p>
-                  </div>
-                  <div className="rating-badge bg-white/90 text-foreground">
-                    {exp.rating}
-                  </div>
-                </div>
-                
-                <div className="space-y-2 mt-6">
-                  {exp.highlights.map((highlight, i) => (
-                    <p key={i} className="text-sm opacity-80">• {highlight}</p>
-                  ))}
-                </div>
-                
-                <div className="mt-6 flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all">
-                  View Details <ArrowRight className="w-4 h-4" />
-                </div>
-              </div>
-            ))}
-          </div>
+          <p className="text-muted-foreground mb-12">Select recent and notable experiences</p>
+          
+          <ExperienceCarousel experiences={experiences} />
         </div>
       </section>
 
@@ -291,6 +268,9 @@ export default function Home() {
           <Mail className="w-6 h-6" />
         </a>
       </div>
+
+      {/* Theme Switcher */}
+      <ThemeSwitcher />
     </div>
   );
 }
