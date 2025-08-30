@@ -1,285 +1,296 @@
-import Navigation from "@/components/Navigation";
-import ExperienceCard from "@/components/ExperienceCard";
-import SkillCard from "@/components/SkillCard";
-import AchievementCard from "@/components/AchievementCard";
-import { Mail, MapPin, ExternalLink } from "lucide-react";
+import { Mail, MapPin, ExternalLink, ArrowRight } from "lucide-react";
+import { useState } from "react";
 
-const experienceData = [
+// Experience data with colorful card assignments
+const experiences = [
   {
-    rating: 95,
-    title: "Software Development Engineer 2",
     company: "AngelOne",
-    location: "Remote",
-    period: "May 2024 - Present",
-    level: "senior" as const,
-    levelDisplay: "SENIOR",
-    roleType: "Frontend Specialist",
-    achievements: [
-      "Enhanced Core Web Vitals for MTF and Stock Pledge modules, elevating FCP, LCP, and CRP by 41%",
-      "Built trading analytics platform serving 190K+ monthly active users with interactive charts",
-      "Delivered real-time chat features with custom rich text editor and live polling",
-      "Led Svelte 5 migration for 10+ modules with successful production deployment"
+    role: "Software Engineer 2",
+    period: "2024 - Present",
+    rating: 95,
+    color: "card-coral",
+    highlights: [
+      "Built analytics platform for 190K+ users",
+      "Improved Core Web Vitals by 41%",
+      "Led Svelte 5 migration"
     ]
   },
   {
-    rating: 88,
-    title: "Software Development Engineer 2",
     company: "Innovaccer",
-    location: "Noida",
-    period: "Dec 2021 - May 2024",
-    level: "advanced" as const,
-    levelDisplay: "ADVANCED",
-    roleType: "Team Lead",
-    achievements: [
-      "Led development of Patient Relations Management (PRM) tool for 2 clients end-to-end",
-      "Built Smart Assist with OpenAI APIs, increasing user engagement by 18%",
-      "Mentored 2 new developers with comprehensive code reviews and training",
-      "Modernized 4 web apps with micro frontend architecture"
+    role: "Software Engineer 2",
+    period: "2021 - 2024",
+    rating: 88,
+    color: "card-blue",
+    highlights: [
+      "Led PRM tool development",
+      "Built Smart Assist with OpenAI",
+      "Mentored 2 developers"
     ]
   },
   {
-    rating: 82,
-    title: "Software Developer",
     company: "Internshala",
-    location: "Gurugram",
-    period: "Sep 2020 - Nov 2021",
-    level: "intermediate" as const,
-    levelDisplay: "GROWTH",
-    roleType: "Developer",
-    achievements: [
-      "Developed Job Oriented Specialization (JOS) product contributing 5% monthly revenue",
-      "Enhanced UI/UX increasing enrollment rates by 22.56% with React migration",
-      "Boosted social shares of certificates from 30.55% to 45.62%",
-      "Successfully coordinated between teams to deliver projects ahead of schedule"
+    role: "Software Developer",
+    period: "2020 - 2021",
+    rating: 82,
+    color: "card-green",
+    highlights: [
+      "Developed JOS product (5% revenue)",
+      "Increased enrollment by 22.56%",
+      "Boosted certificate shares to 45.62%"
     ]
   }
 ];
 
-const frontendSkills = [
-  { name: "JavaScript", rating: 95 },
-  { name: "ReactJS", rating: 93 },
-  { name: "Svelte", rating: 90 },
-  { name: "Redux", rating: 88 },
-  { name: "HTML/CSS", rating: 94 }
+// Skills with ratings
+const skills = [
+  { name: "React", rating: 93, category: "frontend" },
+  { name: "JavaScript", rating: 95, category: "frontend" },
+  { name: "Svelte", rating: 90, category: "frontend" },
+  { name: "TypeScript", rating: 88, category: "frontend" },
+  { name: "Node.js", rating: 85, category: "backend" },
+  { name: "CSS/Tailwind", rating: 92, category: "frontend" },
 ];
 
-const backendSkills = [
-  { name: "NodeJS", rating: 85 },
-  { name: "Webpack", rating: 82 },
-  { name: "Testing (Jest/RTL)", rating: 87 },
-  { name: "CI/CD & Git", rating: 89 },
-  { name: "REST APIs", rating: 91 }
-];
-
-const achievements = [
-  {
-    value: "190K+",
-    title: "Monthly Active Users",
-    description: "Trading analytics platform serving enterprise-scale user base",
-    color: "text-primary"
-  },
-  {
-    value: "41%",
-    title: "Performance Boost",
-    description: "Core Web Vitals improvement through optimization techniques",
-    color: "text-green-600"
-  },
-  {
-    value: "22.56%",
-    title: "Enrollment Increase",
-    description: "UI/UX enhancement driving significant user engagement growth",
-    color: "text-blue-600"
-  },
-  {
-    value: "18%",
-    title: "User Engagement",
-    description: "Smart Assist AI integration boosting user interaction rates",
-    color: "text-purple-600"
-  },
-  {
-    value: "10+",
-    title: "Module Migrations",
-    description: "Successful Svelte 5 upgrades with zero production issues",
-    color: "text-orange-600"
-  },
-  {
-    value: "5%",
-    title: "Revenue Impact",
-    description: "Direct contribution to monthly revenue through product development",
-    color: "text-red-600"
-  }
+// Project cards data
+const projectCards = [
+  { title: "Trading Analytics", metric: "190K+ Users", color: "card-mint", icon: "📊" },
+  { title: "Performance Boost", metric: "41% Faster", color: "card-yellow", icon: "🚀" },
+  { title: "Smart Assist AI", metric: "18% Engagement", color: "card-purple", icon: "🤖" },
+  { title: "Enrollment Growth", metric: "22.56% Increase", color: "card-coral", icon: "📈" },
+  { title: "Module Migration", metric: "10+ Modules", color: "card-blue", icon: "🔄" },
+  { title: "Revenue Impact", metric: "5% Monthly", color: "card-green", icon: "💰" },
 ];
 
 export default function Home() {
+  const [activeSection, setActiveSection] = useState("work");
+
   return (
-    <div className="bg-background text-foreground antialiased">
-      <Navigation />
+    <div className="min-h-screen bg-background">
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
+            <span className="text-primary-foreground font-black text-xl">A</span>
+          </div>
+          <a 
+            href="mailto:ianujsingh088@gmail.com"
+            className="btn-primary"
+            data-testid="nav-cta"
+          >
+            Get In Touch
+          </a>
+        </div>
+      </nav>
 
       {/* Hero Section */}
-      <section id="about" className="pt-24 pb-20 px-6 lg:px-8">
+      <section className="pt-32 pb-16 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <div className="relative inline-block mb-8 animate-float">
-              <div className="gradient-border">
-                <img 
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&h=400" 
-                  alt="Professional headshot of Anuj Singh" 
-                  className="w-48 h-48 rounded-2xl object-cover"
-                  data-testid="profile-image"
-                />
-              </div>
-            </div>
-            
-            <h1 className="text-5xl lg:text-7xl font-bold tracking-tight mb-6 animate-slide-in-up" data-testid="hero-title">
-              <span className="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
-                Frontend Engineer
-              </span>
-            </h1>
-            
-            <p className="text-xl lg:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed text-balance" data-testid="hero-description">
-              Crafting exceptional digital experiences with modern web technologies. 
+          <div className="text-center mb-4">
+            <p className="text-muted-foreground uppercase tracking-widest text-sm mb-4">
+              New Delhi, India
+            </p>
+            <a 
+              href="mailto:ianujsingh088@gmail.com" 
+              className="text-muted-foreground hover:text-primary transition-colors text-sm"
+              data-testid="email-link"
+            >
+              ianujsingh088@gmail.com
+            </a>
+          </div>
+          
+          <h1 className="text-6xl md:text-8xl lg:text-9xl heading-bold text-center mb-8 animate-fade-in">
+            ANUJ SINGH
+          </h1>
+
+          {/* Colorful skill cards row */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            {["React", "TypeScript", "Svelte", "Node.js"].map((skill, index) => {
+              const colors = ["card-green", "card-blue", "card-coral", "card-purple"];
+              return (
+                <div 
+                  key={skill}
+                  className={`${colors[index]} px-6 py-3 rounded-2xl font-semibold`}
+                  data-testid={`hero-skill-${skill.toLowerCase()}`}
+                >
+                  {skill}
+                </div>
+              );
+            })}
+          </div>
+
+          <h2 className="text-3xl md:text-5xl lg:text-6xl heading-bold text-center text-primary mb-12">
+            FRONTEND ENGINEER &<br />
+            PERFORMANCE SPECIALIST
+          </h2>
+
+          <div className="text-center mb-16">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Building scalable web applications with modern technologies.
               Specialized in React, Svelte, and performance optimization.
             </p>
-            
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
-              <div className="flex items-center gap-2 text-muted-foreground" data-testid="location-info">
-                <MapPin className="w-5 h-5" />
-                New Delhi, India
-              </div>
-              <div className="flex items-center gap-2 text-muted-foreground" data-testid="email-info">
-                <Mail className="w-5 h-5" />
-                ianujsingh088@gmail.com
-              </div>
+          </div>
+
+          {/* Clients Include */}
+          <div className="text-center">
+            <p className="text-sm uppercase tracking-widest text-muted-foreground mb-4">
+              Companies I've Worked With
+            </p>
+            <div className="flex justify-center items-center gap-8 flex-wrap">
+              <span className="text-lg font-semibold">AngelOne</span>
+              <span className="text-lg font-semibold">Innovaccer</span>
+              <span className="text-lg font-semibold">Internshala</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Experience Section */}
-      <section id="experience" className="py-20 px-6 lg:px-8 bg-secondary/30">
+      {/* Featured Work Section */}
+      <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mb-4" data-testid="experience-section-title">
-              Professional Journey
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Career progression through Ultimate Team-style experience cards
-            </p>
-          </div>
+          <h3 className="text-4xl md:text-5xl heading-bold mb-4">Featured Work</h3>
+          <p className="text-muted-foreground mb-12">Select recent and notable projects</p>
 
-          <div className="grid gap-8 lg:gap-12">
-            {experienceData.map((experience, index) => (
-              <ExperienceCard key={index} {...experience} />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {experiences.map((exp, index) => (
+              <div 
+                key={index}
+                className={`card-minimal ${exp.color} p-8 cursor-pointer group`}
+                data-testid={`experience-card-${exp.company.toLowerCase()}`}
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h4 className="text-2xl font-black mb-1">{exp.company}</h4>
+                    <p className="text-sm font-medium opacity-80">{exp.role}</p>
+                    <p className="text-xs opacity-60">{exp.period}</p>
+                  </div>
+                  <div className="rating-badge bg-white/90 text-foreground">
+                    {exp.rating}
+                  </div>
+                </div>
+                
+                <div className="space-y-2 mt-6">
+                  {exp.highlights.map((highlight, i) => (
+                    <p key={i} className="text-sm opacity-80">• {highlight}</p>
+                  ))}
+                </div>
+                
+                <div className="mt-6 flex items-center gap-2 text-sm font-semibold group-hover:gap-3 transition-all">
+                  View Details <ArrowRight className="w-4 h-4" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* More Work Section - Grid of colorful cards */}
+      <section className="py-20 px-6 bg-secondary/30">
+        <div className="max-w-7xl mx-auto">
+          <h3 className="text-4xl md:text-5xl heading-bold mb-4">Key Achievements</h3>
+          <p className="text-muted-foreground mb-12">Take a scroll, stay a while</p>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {projectCards.map((project, index) => (
+              <div 
+                key={index}
+                className={`card-minimal ${project.color} p-8 text-center`}
+                data-testid={`achievement-${index}`}
+              >
+                <div className="text-4xl mb-4">{project.icon}</div>
+                <h4 className="font-black text-xl mb-2">{project.title}</h4>
+                <p className="text-2xl font-bold">{project.metric}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className="py-20 px-6 lg:px-8">
+      <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mb-4" data-testid="skills-section-title">
-              Technical Arsenal
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Skill ratings based on real-world experience and project impact
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-            <SkillCard title="Frontend Skills" skills={frontendSkills} />
-            <SkillCard title="Backend & Tools" skills={backendSkills} />
-          </div>
-        </div>
-      </section>
-
-      {/* Achievements Section */}
-      <section id="achievements" className="py-20 px-6 lg:px-8 bg-secondary/30">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mb-4" data-testid="achievements-section-title">
-              Key Achievements
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Impactful contributions across different organizations
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {achievements.map((achievement, index) => (
-              <AchievementCard key={index} {...achievement} />
+          <h3 className="text-4xl md:text-5xl heading-bold mb-12">Technical Skills</h3>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {skills.map((skill) => (
+              <div 
+                key={skill.name}
+                className="flex items-center justify-between p-4 bg-card rounded-2xl"
+                data-testid={`skill-${skill.name.toLowerCase()}`}
+              >
+                <span className="font-semibold text-lg">{skill.name}</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-32 h-2 bg-secondary rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-primary rounded-full transition-all duration-1000"
+                      style={{ width: `${skill.rating}%` }}
+                    />
+                  </div>
+                  <span className="font-black text-xl text-primary">{skill.rating}</span>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 px-6 lg:px-8">
+      <section className="py-20 px-6 bg-secondary/30">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mb-8" data-testid="contact-section-title">
-            Let's Build Something Amazing
-          </h2>
+          <h3 className="text-4xl md:text-5xl heading-bold mb-8">
+            Let's Work Together
+          </h3>
           <p className="text-xl text-muted-foreground mb-12">
             Ready to discuss your next project or explore collaboration opportunities
           </p>
-          
-          <div className="mb-12">
-            <img 
-              src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&h=600" 
-              alt="Clean modern workspace with Apple devices and minimalist setup" 
-              className="rounded-2xl shadow-2xl w-full h-auto"
-              data-testid="workspace-image"
-            />
-          </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-8">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <a 
-              href="mailto:ianujsingh088@gmail.com" 
-              className="flex items-center gap-3 bg-primary text-primary-foreground px-8 py-4 rounded-xl hover:bg-primary/90 transition-all duration-300 transform hover:scale-[1.05]"
-              data-testid="email-button"
+              href="mailto:ianujsingh088@gmail.com"
+              className="btn-primary inline-flex items-center gap-2"
+              data-testid="contact-email"
             >
               <Mail className="w-5 h-5" />
               Email Me
             </a>
-            
             <a 
-              href="https://linkedin.com/in/anuj-singh-3a71b3146/" 
+              href="https://linkedin.com/in/anuj-singh-3a71b3146/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-3 border border-border px-8 py-4 rounded-xl hover:bg-accent transition-all duration-300 transform hover:scale-[1.05]"
-              data-testid="linkedin-button"
+              className="bg-secondary text-foreground px-6 py-3 rounded-full font-semibold transition-all duration-300 hover:scale-105 inline-flex items-center gap-2"
+              data-testid="contact-linkedin"
             >
               <ExternalLink className="w-5 h-5" />
-              LinkedIn
+              LinkedIn Profile
             </a>
           </div>
 
-          <div className="ultimate-card rounded-2xl p-8 max-w-2xl mx-auto" data-testid="education-card">
-            <h3 className="text-2xl font-bold mb-4">Education</h3>
-            <div className="text-left">
-              <h4 className="font-semibold text-lg" data-testid="education-degree">
-                Bachelor of Technology (B.Tech in ECE)
-              </h4>
-              <p className="text-muted-foreground" data-testid="education-institution">
-                Maharaja Agrasen Institute of Technology, New Delhi
-              </p>
-              <p className="text-muted-foreground" data-testid="education-details">
-                CGPA: 8.3 · Jul 2015 - Jun 2019
-              </p>
-            </div>
+          {/* Education Card */}
+          <div className="card-minimal card-yellow p-8 max-w-md mx-auto">
+            <h4 className="font-black text-xl mb-3">Education</h4>
+            <p className="font-semibold">B.Tech in ECE</p>
+            <p className="text-sm opacity-80">Maharaja Agrasen Institute of Technology</p>
+            <p className="text-sm opacity-80">CGPA: 8.3 | 2015-2019</p>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-6 lg:px-8 border-t border-border">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-muted-foreground" data-testid="footer-text">
-            © 2024 Anuj Singh. Crafted with passion for exceptional web experiences.
-          </p>
-        </div>
+      <footer className="py-8 px-6 text-center">
+        <p className="text-muted-foreground text-sm">
+          © 2024 Anuj Singh • Crafted with passion for exceptional web experiences
+        </p>
       </footer>
+
+      {/* Floating CTA Button */}
+      <div className="fixed bottom-8 right-8 z-50">
+        <a 
+          href="mailto:ianujsingh088@gmail.com"
+          className="bg-primary text-primary-foreground w-16 h-16 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300"
+          data-testid="floating-cta"
+        >
+          <Mail className="w-6 h-6" />
+        </a>
+      </div>
     </div>
   );
 }
