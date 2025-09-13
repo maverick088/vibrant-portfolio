@@ -1,41 +1,28 @@
 import { Link } from 'wouter';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Mail, User } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import ThemeSwitcher from '@/components/ThemeSwitcher';
+import type { NewsItem, Project } from '@shared/schema';
 
 export default function About() {
-  const newsItems = [
-    {
-      title: "AngelOne Platform",
-      description: "Trading Analytics Platform",
-      detail: "Built for 190K+ monthly active users",
-      color: "card-coral"
-    },
-    {
-      title: "Performance Expert",
-      description: "Core Web Vitals",
-      detail: "41% improvement in FCP, LCP, CRP",
-      color: "card-blue"
-    },
-    {
-      title: "AI Integration",
-      description: "Smart Assist Feature",
-      detail: "18% increase in user engagement",
-      color: "card-green"
-    },
-    {
-      title: "Team Leadership",
-      description: "Mentorship & Guidance",
-      detail: "Led and mentored 2 developers",
-      color: "card-purple"
-    }
-  ];
+  const { data: newsItems = [], isLoading: newsLoading } = useQuery<NewsItem[]>({
+    queryKey: ['/api/news-items'],
+  });
 
-  const projects = [
-    { name: "AngelOne Trading Platform", period: "2024", link: "#" },
-    { name: "Patient Relations Management", period: "2023", link: "#" },
-    { name: "Smart Assist AI", period: "2022", link: "#" },
-    { name: "Job Oriented Specialization", period: "2021", link: "#" },
-    { name: "Micro Frontend Architecture", period: "2022", link: "#" }
-  ];
+  const { data: projects = [], isLoading: projectsLoading } = useQuery<Project[]>({
+    queryKey: ['/api/projects'],
+  });
+
+  if (newsLoading || projectsLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -46,8 +33,17 @@ export default function About() {
             <ArrowLeft className="w-5 h-5" />
             <span className="font-semibold">Home</span>
           </Link>
-          <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-            <span className="text-primary-foreground font-black text-xl">A</span>
+          <div className="flex items-center gap-4">
+            <a
+              href="mailto:ianujsingh088@gmail.com"
+              className="btn-primary"
+              data-testid="nav-cta"
+            >
+              Get In Touch
+            </a>
+            <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
+              <span className="text-primary-foreground font-black text-xl">A</span>
+            </div>
           </div>
         </div>
       </nav>
@@ -95,11 +91,11 @@ export default function About() {
           <div className="mb-20">
             <h2 className="text-3xl md:text-4xl heading-bold mb-8">Key Achievements</h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {newsItems.map((item, index) => (
+              {newsItems.map((item) => (
                 <div 
-                  key={index}
+                  key={item.id}
                   className={`card-minimal ${item.color} p-6 text-center`}
-                  data-testid={`achievement-${index}`}
+                  data-testid={`achievement-${item.id}`}
                 >
                   <h3 className="font-black text-lg mb-2">{item.title}</h3>
                   <p className="text-sm font-semibold mb-1 opacity-90">{item.description}</p>
@@ -113,11 +109,11 @@ export default function About() {
           <div>
             <h2 className="text-3xl md:text-4xl heading-bold mb-8">Notable Projects</h2>
             <div className="grid md:grid-cols-2 gap-4">
-              {projects.map((project, index) => (
+              {projects.map((project) => (
                 <div 
-                  key={index}
+                  key={project.id}
                   className="p-4 bg-card text-card-foreground rounded-2xl"
-                  data-testid={`project-${index}`}
+                  data-testid={`project-${project.id}`}
                 >
                   <div>
                     <h3 className="font-semibold text-card-foreground">{project.name}</h3>
@@ -142,6 +138,22 @@ export default function About() {
           </div>
         </div>
       </section>
+      
+      {/* Floating Theme Switcher */}
+      <div className="fixed bottom-6 right-6 z-50">
+        <ThemeSwitcher />
+      </div>
+      
+      {/* Floating Email Button */}
+      <div className="fixed bottom-6 right-20 z-50">
+        <a
+          href="mailto:ianujsingh088@gmail.com"
+          className="w-12 h-12 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110"
+          data-testid="floating-email"
+        >
+          <Mail className="w-5 h-5" />
+        </a>
+      </div>
     </div>
   );
 }

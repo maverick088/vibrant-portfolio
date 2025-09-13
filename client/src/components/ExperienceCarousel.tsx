@@ -87,14 +87,32 @@ export default function ExperienceCarousel({ experiences }: ExperienceCarouselPr
     };
   }, [experiences.length]);
 
-  // Auto-play functionality
+  // Auto-play functionality - only when carousel is visible
   useEffect(() => {
-    const interval = setInterval(() => {
-      nextSlide();
-    }, 5000); // Change slide every 5 seconds
+    const carousel = scrollContainerRef.current;
+    if (!carousel) return;
 
-    return () => clearInterval(interval);
-  }, [currentIndex, nextSlide]);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const isVisible = entries[0].isIntersecting;
+        
+        if (isVisible) {
+          const interval = setInterval(() => {
+            nextSlide();
+          }, 6000); // Slower auto-play - 6 seconds
+
+          return () => clearInterval(interval);
+        }
+      },
+      { threshold: 0.3 } // Only auto-play when 30% of carousel is visible
+    );
+
+    observer.observe(carousel);
+    
+    return () => {
+      observer.disconnect();
+    };
+  }, [nextSlide]);
   
   return (
     <div className="relative max-w-6xl mx-auto">
@@ -147,17 +165,16 @@ export default function ExperienceCarousel({ experiences }: ExperienceCarouselPr
                     </div>
                     
                     {/* Company Info */}
-                    <h3 className={`font-black mb-2 ${isActive ? 'text-2xl' : 'text-xl'}`}>{exp.company}</h3>
-                    <p className={`font-semibold mb-1 opacity-90 ${isActive ? 'text-base' : 'text-sm'}`}>{exp.role}</p>
-                    <p className={`opacity-70 mb-6 ${isActive ? 'text-sm' : 'text-xs'}`}>{exp.period}</p>
+                    <h3 className={`font-black mb-2 ${isActive ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'}`}>{exp.company}</h3>
+                    <p className={`font-semibold mb-1 opacity-90 ${isActive ? 'text-base md:text-lg' : 'text-sm md:text-base'}`}>{exp.role}</p>
+                    <p className={`opacity-70 mb-6 ${isActive ? 'text-sm md:text-base' : 'text-xs md:text-sm'}`}>{exp.period}</p>
                     
                     {/* Highlights - Show more for active card */}
-                    <div className="space-y-3 flex-1">
+                    <div className="space-y-4 flex-1">
                       {exp.highlights.slice(0, isActive ? 3 : 2).map((highlight, i) => (
-                        <div key={i} className="flex items-start gap-2">
-                          <span className={`mt-0.5 ${isActive ? 'text-lg' : 'text-sm'}`}>•</span>
+                        <div key={i} className="">
                           <p className={`opacity-90 leading-relaxed ${
-                            isActive ? 'text-sm' : 'text-xs'
+                            isActive ? 'text-base md:text-lg' : 'text-sm md:text-base'
                           } ${!isActive && highlight.length > 50 ? 'line-clamp-2' : ''}`}>
                             {highlight}
                           </p>

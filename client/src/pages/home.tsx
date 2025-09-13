@@ -1,54 +1,18 @@
 import { Mail, MapPin, ExternalLink, User } from "lucide-react";
 import { Link } from "wouter";
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import ExperienceCarousel from "@/components/ExperienceCarousel";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
+import type { Experience, Skill, ProjectCard } from "@shared/schema";
 
-// Experience data for carousel
-const experiences = [
-  {
-    company: "AngelOne",
-    role: "Software Engineer 2",
-    period: "2024 - Present",
-    rating: 95,
-    highlights: [
-      "Built analytics platform for 190K+ users",
-      "Improved Core Web Vitals by 41%",
-      "Led Svelte 5 migration for 10+ modules",
-    ],
-    index: 0,
-  },
-  {
-    company: "Innovaccer",
-    role: "Software Engineer 2",
-    period: "2021 - 2024",
-    rating: 88,
-    highlights: [
-      "Led PRM tool development end-to-end",
-      "Built Smart Assist with OpenAI APIs",
-      "Mentored 2 developers with comprehensive training",
-    ],
-    index: 1,
-  },
-  {
-    company: "Internshala",
-    role: "Software Developer",
-    period: "2020 - 2021",
-    rating: 82,
-    highlights: [
-      "Developed JOS product contributing 5% revenue",
-      "Increased enrollment rates by 22.56%",
-      "Boosted certificate shares from 30% to 45.62%",
-    ],
-    index: 2,
-  },
-];
 
 // Typing Animation Component
-function TypingAnimation({ text, delay = 100, onComplete }: { text: string; delay?: number; onComplete?: () => void }) {
+function TypingAnimation({ text, delay = 200, onComplete }: { text: string; delay?: number; onComplete?: () => void }) {
   const [displayedText, setDisplayedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
+  const [isComplete, setIsComplete] = useState(false);
 
   useEffect(() => {
     if (currentIndex < text.length) {
@@ -58,29 +22,30 @@ function TypingAnimation({ text, delay = 100, onComplete }: { text: string; dela
       }, delay);
 
       return () => clearTimeout(timeout);
-    } else {
-      // Animation complete
+    } else if (!isComplete) {
+      // Animation complete for first time
+      setIsComplete(true);
       if (onComplete) onComplete();
       
-      // Continue cursor blinking
-      const cursorInterval = setInterval(() => {
-        setShowCursor(prev => !prev);
-      }, 600);
+      // Start loop after 2 seconds
+      const loopTimeout = setTimeout(() => {
+        setDisplayedText("");
+        setCurrentIndex(0);
+        setIsComplete(false);
+      }, 2000);
 
-      return () => clearInterval(cursorInterval);
+      return () => clearTimeout(loopTimeout);
     }
-  }, [currentIndex, text, delay, onComplete]);
+  }, [currentIndex, text, delay, onComplete, isComplete]);
 
-  // Cursor blinking during typing
+  // Cursor blinking
   useEffect(() => {
-    if (currentIndex < text.length) {
-      const cursorInterval = setInterval(() => {
-        setShowCursor(prev => !prev);
-      }, 500);
+    const cursorInterval = setInterval(() => {
+      setShowCursor(prev => !prev);
+    }, 500);
 
-      return () => clearInterval(cursorInterval);
-    }
-  }, [currentIndex, text.length]);
+    return () => clearInterval(cursorInterval);
+  }, []);
 
   return (
     <span>
@@ -90,61 +55,38 @@ function TypingAnimation({ text, delay = 100, onComplete }: { text: string; dela
   );
 }
 
-// Skills with ratings
-const skills = [
-  { name: "React", rating: 93, category: "frontend" },
-  { name: "JavaScript", rating: 95, category: "frontend" },
-  { name: "Svelte", rating: 90, category: "frontend" },
-  { name: "TypeScript", rating: 88, category: "frontend" },
-  { name: "Node.js", rating: 85, category: "backend" },
-  { name: "CSS/Tailwind", rating: 92, category: "frontend" },
-];
 
-// Project cards data
-const projectCards = [
-  {
-    title: "Trading Analytics",
-    metric: "190K+ Users",
-    color: "card-mint",
-    icon: "📊",
-  },
-  {
-    title: "Performance Boost",
-    metric: "41% Faster",
-    color: "card-yellow",
-    icon: "🚀",
-  },
-  {
-    title: "Smart Assist AI",
-    metric: "18% Engagement",
-    color: "card-purple",
-    icon: "🤖",
-  },
-  {
-    title: "Enrollment Growth",
-    metric: "22.56% Increase",
-    color: "card-coral",
-    icon: "📈",
-  },
-  {
-    title: "Module Migration",
-    metric: "10+ Modules",
-    color: "card-blue",
-    icon: "🔄",
-  },
-  {
-    title: "Revenue Impact",
-    metric: "5% Monthly",
-    color: "card-green",
-    icon: "💰",
-  },
-];
 
 export default function Home() {
+  // Fetch data from APIs
+  const { data: experiences = [], isLoading: experiencesLoading } = useQuery<Experience[]>({
+    queryKey: ['/api/experiences'],
+  });
+
+  const { data: skills = [], isLoading: skillsLoading } = useQuery<Skill[]>({
+    queryKey: ['/api/skills'],
+  });
+
+  const { data: projectCards = [], isLoading: projectCardsLoading } = useQuery<ProjectCard[]>({
+    queryKey: ['/api/project-cards'],
+  });
+
+  // Show loading state
+  if (experiencesLoading || skillsLoading || projectCardsLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading portfolio data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/98 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
           <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
             <span className="text-primary-foreground font-black text-xl">
@@ -188,7 +130,7 @@ export default function Home() {
           </div>
 
           <h1 className="text-6xl md:text-8xl lg:text-9xl heading-bold text-center mb-8 animate-fade-in" data-testid="hero-name">
-            <TypingAnimation text="ANUJ SINGH" delay={120} />
+            <TypingAnimation text="ANUJ SINGH" delay={200} />
           </h1>
 
           {/* Colorful skill cards row */}
