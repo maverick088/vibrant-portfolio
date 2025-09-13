@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { ExternalLink } from 'lucide-react';
+import { ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Experience {
   company: string;
@@ -87,32 +87,55 @@ export default function ExperienceCarousel({ experiences }: ExperienceCarouselPr
     };
   }, [experiences.length]);
 
-  // Auto-play functionality - only when carousel is visible
-  useEffect(() => {
-    const carousel = scrollContainerRef.current;
-    if (!carousel) return;
+  // Touch/swipe gesture handling
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [startY, setStartY] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const isVisible = entries[0].isIntersecting;
-        
-        if (isVisible) {
-          const interval = setInterval(() => {
-            nextSlide();
-          }, 6000); // Slower auto-play - 6 seconds
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsDragging(true);
+    setStartX(e.touches[0].clientX);
+    setStartY(e.touches[0].clientY);
+    if (scrollContainerRef.current) {
+      setScrollLeft(scrollContainerRef.current.scrollLeft);
+    }
+  };
 
-          return () => clearInterval(interval);
-        }
-      },
-      { threshold: 0.3 } // Only auto-play when 30% of carousel is visible
-    );
-
-    observer.observe(carousel);
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !scrollContainerRef.current) return;
     
-    return () => {
-      observer.disconnect();
-    };
-  }, [nextSlide]);
+    const x = e.touches[0].clientX;
+    const y = e.touches[0].clientY;
+    const walkX = (x - startX) * 2;
+    const walkY = Math.abs(y - startY);
+    
+    // Only scroll horizontally if horizontal movement is greater than vertical
+    if (Math.abs(walkX) > walkY) {
+      e.preventDefault();
+      scrollContainerRef.current.scrollLeft = scrollLeft - walkX;
+    }
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isDragging || !scrollContainerRef.current) return;
+    
+    setIsDragging(false);
+    const x = e.changedTouches[0].clientX;
+    const walk = x - startX;
+    
+    // Determine if swipe was significant enough to change slides
+    if (Math.abs(walk) > 50) {
+      if (walk > 0) {
+        prevSlide();
+      } else {
+        nextSlide();
+      }
+    } else {
+      // Snap back to current slide
+      scrollToIndex(currentIndex);
+    }
+  };
   
   return (
     <div className="relative max-w-6xl mx-auto">
@@ -121,8 +144,11 @@ export default function ExperienceCarousel({ experiences }: ExperienceCarouselPr
         ref={scrollContainerRef}
         className="overflow-x-auto scrollbar-hide snap-x snap-mandatory"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
-        <div className="flex gap-[4%]">
+        <div className="flex gap-[4%] pr-[20%]"> {/* Add right padding to show partial next card */}
           {experiences.map((exp, index) => {
             const isActive = index === currentIndex;
             const isAdjacent = Math.abs(index - currentIndex) === 1 || 
@@ -142,7 +168,7 @@ export default function ExperienceCarousel({ experiences }: ExperienceCarouselPr
                 }`}
                 data-testid={`experience-card-${index}`}
               >
-                <div className={`${colors[index % colors.length]} rounded-3xl h-[420px] relative overflow-hidden shadow-lg`}>
+                <div className={`${colors[index % colors.length]} rounded-3xl h-[420px] relative overflow-hidden shadow-lg border-2 border-transparent animate-border-gradient`}>
                   {/* Image URL in top right corner if available */}
                   {exp.imageUrl && (
                     <div className="absolute top-4 right-4 z-20">
@@ -196,39 +222,41 @@ export default function ExperienceCarousel({ experiences }: ExperienceCarouselPr
         </div>
       </div>
       
-      {/* Touch Bubble Indicators */}
-      <div className="flex justify-center gap-3 mt-8">
-        {experiences.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => scrollToIndex(index)}
-            className={`relative transition-all duration-300 ${
-              index === currentIndex 
-                ? 'w-12 h-12' 
-                : 'w-8 h-8 hover:w-10 hover:h-10'
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-            data-testid={`swipe-indicator-${index}`}
-          >
-            <div className={`w-full h-full rounded-full transition-all duration-300 ${
-              index === currentIndex
-                ? 'bg-primary shadow-lg scale-110'
-                : 'bg-muted hover:bg-primary/50'
-            }`} />
-            
-            {/* Touch ripple effect */}
-            <div className={`absolute inset-0 rounded-full transition-all duration-500 ${
-              index === currentIndex
-                ? 'bg-primary/20 animate-pulse'
-                : 'bg-transparent'
-            }`} />
-          </button>
-        ))}
+      {/* Desktop Navigation Buttons */}
+      <div className="hidden md:flex absolute top-1/2 -translate-y-1/2 left-4 right-4 justify-between pointer-events-none z-20">
+        <button
+          onClick={prevSlide}
+          className="w-12 h-12 bg-card/90 backdrop-blur-sm hover:bg-card text-card-foreground rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 pointer-events-auto"
+          data-testid="prev-button"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button
+          onClick={nextSlide}
+          className="w-12 h-12 bg-card/90 backdrop-blur-sm hover:bg-card text-card-foreground rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110 pointer-events-auto"
+          data-testid="next-button"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
       </div>
       
-      {/* Progress indicator */}
-      <div className="mt-6 text-center text-sm text-muted-foreground">
-        {currentIndex + 1} / {experiences.length}
+      {/* Subtle Progress Indicator */}
+      <div className="mt-6 text-center">
+        <div className="inline-flex items-center gap-2">
+          {experiences.map((_, index) => (
+            <div
+              key={index}
+              className={`h-1 rounded-full transition-all duration-300 ${
+                index === currentIndex 
+                  ? 'w-8 bg-primary' 
+                  : 'w-2 bg-muted'
+              }`}
+            />
+          ))}
+        </div>
+        <p className="text-xs text-muted-foreground mt-2 opacity-60">
+          Swipe or use arrows • {currentIndex + 1} of {experiences.length}
+        </p>
       </div>
     </div>
   );

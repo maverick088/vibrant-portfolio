@@ -168,3 +168,62 @@
 .animate-slide-up {
   animation: slideUp 0.8s ease-out;
 }
+
+/* Animated Border Gradient for Experience Cards */
+@keyframes borderGradient {
+  0% {
+    border-image: linear-gradient(45deg, rgba(255, 107, 53, 0.8), rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.8)) 1;
+  }
+  25% {
+    border-image: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.8), rgba(255, 107, 53, 0.2)) 1;
+  }
+  50% {
+    border-image: linear-gradient(225deg, rgba(255, 107, 53, 0.8), rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.8)) 1;
+  }
+  75% {
+    border-image: linear-gradient(315deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.8), rgba(255, 107, 53, 0.2)) 1;
+  }
+  100% {
+    border-image: linear-gradient(45deg, rgba(255, 107, 53, 0.8), rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.8)) 1;
+  }
+}
+
+@keyframes borderShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-border-gradient {
+  position: relative;
+  border: 2px solid transparent;
+  background: linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
+              linear-gradient(45deg, rgba(255, 107, 53, 0.6), rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.6)) border-box;
+}
+
+.animate-border-gradient::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    rgba(255, 107, 53, 0.8), 
+    rgba(255, 107, 53, 0.2), 
+    rgba(255, 107, 53, 0.8), 
+    rgba(255, 107, 53, 0.2),
+    rgba(255, 107, 53, 0.8)
+  );
+  background-size: 200% 200%;
+  border-radius: inherit;
+  z-index: -1;
+  animation: borderShimmer 3s linear infinite;
+}
+
+.animate-border-gradient:hover::before {
+  animation-duration: 1.5s;
+}
