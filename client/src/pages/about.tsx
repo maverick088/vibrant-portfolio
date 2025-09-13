@@ -148,10 +148,10 @@ export default function About() {
       <div className="fixed bottom-6 right-20 z-50">
         <a
           href="mailto:ianujsingh088@gmail.com"
-          className="w-12 h-12 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110"
+          className="w-16 h-16 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-110"
           data-testid="floating-email"
         >
-          <Mail className="w-5 h-5" />
+          <Mail className="w-6 h-6" />
         </a>
       </div>
     </div>
