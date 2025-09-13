@@ -1,16 +1,62 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Palette } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function ThemeSwitcher() {
   const [isOpen, setIsOpen] = useState(false);
   const { theme, setTheme, themes } = useTheme();
+  const popupRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Close popup when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        popupRef.current &&
+        buttonRef.current &&
+        !popupRef.current.contains(event.target as Node) &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+
+  // Handle keyboard escape and prevent body scrolling
+  useEffect(() => {
+    if (isOpen) {
+      // Prevent body scrolling
+      document.body.style.overflow = 'hidden';
+
+      // Handle escape key
+      const handleEscape = (event: KeyboardEvent) => {
+        if (event.key === 'Escape') {
+          setIsOpen(false);
+        }
+      };
+
+      document.addEventListener('keydown', handleEscape);
+
+      return () => {
+        document.body.style.overflow = 'unset';
+        document.removeEventListener('keydown', handleEscape);
+      };
+    }
+  }, [isOpen]);
 
   return (
     <div className="fixed bottom-8 left-8 z-50">
       {/* Theme Options */}
       {isOpen && (
-        <div className="absolute bottom-20 left-0 bg-card text-card-foreground rounded-2xl shadow-2xl p-4 space-y-2 animate-fade-in">
+        <div ref={popupRef} className="absolute bottom-20 left-0 bg-card text-card-foreground rounded-2xl shadow-2xl p-4 space-y-2 animate-fade-in">
           {themes.map((t) => (
             <button
               key={t.name}
@@ -35,6 +81,7 @@ export default function ThemeSwitcher() {
       
       {/* Theme Toggle Button */}
       <button
+        ref={buttonRef}
         onClick={() => setIsOpen(!isOpen)}
         className="bg-primary text-primary-foreground w-16 h-16 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300"
         aria-label="Change theme"
