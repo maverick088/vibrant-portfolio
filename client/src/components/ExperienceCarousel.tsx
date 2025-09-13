@@ -39,8 +39,8 @@ export default function ExperienceCarousel({ experiences }: ExperienceCarouselPr
           >
             <div className="p-8 h-full flex flex-col">
               {/* Rating Badge */}
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-white/90 rounded-2xl mb-6 self-start">
-                <span className="text-2xl font-black">{exp.rating}</span>
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-card/90 backdrop-blur-sm rounded-2xl mb-6 self-start">
+                <span className="text-2xl font-black text-card-foreground">{exp.rating}</span>
               </div>
               
               {/* Company Info */}
@@ -59,7 +59,7 @@ export default function ExperienceCarousel({ experiences }: ExperienceCarouselPr
               </div>
               
               {/* Company Label */}
-              <div className="mt-6 pt-4 border-t border-black/10">
+              <div className="mt-6 pt-4 border-t border-border/20">
                 <span className="text-xs font-black uppercase tracking-wider opacity-80">
                   {exp.company}
                 </span>
@@ -85,8 +85,8 @@ export default function ExperienceCarousel({ experiences }: ExperienceCarouselPr
                 <div className={`${colors[index % colors.length]} p-8 md:p-12 rounded-3xl`}>
                   <div className="max-w-2xl mx-auto">
                     {/* Rating Badge */}
-                    <div className="inline-flex items-center justify-center w-20 h-20 bg-white/90 rounded-2xl mb-8">
-                      <span className="text-3xl font-black">{exp.rating}</span>
+                    <div className="inline-flex items-center justify-center w-20 h-20 bg-card/90 backdrop-blur-sm rounded-2xl mb-8">
+                      <span className="text-3xl font-black text-card-foreground">{exp.rating}</span>
                     </div>
                     
                     {/* Company Info */}
@@ -113,20 +113,20 @@ export default function ExperienceCarousel({ experiences }: ExperienceCarouselPr
         {/* Navigation Buttons - Only show on mobile */}
         <button
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10"
+          className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-card/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-card transition-colors shadow-lg z-10"
           aria-label="Previous experience"
           data-testid="carousel-prev"
         >
-          <ChevronLeft className="w-6 h-6" />
+          <ChevronLeft className="w-6 h-6 text-card-foreground" />
         </button>
         
         <button
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg z-10"
+          className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-card/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-card transition-colors shadow-lg z-10"
           aria-label="Next experience"
           data-testid="carousel-next"
         >
-          <ChevronRight className="w-6 h-6" />
+          <ChevronRight className="w-6 h-6 text-card-foreground" />
         </button>
         
         {/* Dots Indicator - Only show on mobile */}

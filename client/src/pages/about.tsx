@@ -77,9 +77,9 @@ export default function About() {
             </div>
             
             <div className="space-y-6">
-              <div className="card-minimal p-8">
-                <h3 className="text-2xl font-black mb-4">Expertise</h3>
-                <ul className="space-y-2">
+              <div className="card-minimal bg-card text-card-foreground p-8">
+                <h3 className="text-2xl font-black mb-4 text-card-foreground">Expertise</h3>
+                <ul className="space-y-2 text-card-foreground">
                   <li>• Frontend Architecture & Development</li>
                   <li>• Performance Optimization</li>
                   <li>• React & Svelte Frameworks</li>
@@ -116,11 +116,11 @@ export default function About() {
               {projects.map((project, index) => (
                 <div 
                   key={index}
-                  className="p-4 bg-card rounded-2xl"
+                  className="p-4 bg-card text-card-foreground rounded-2xl"
                   data-testid={`project-${index}`}
                 >
                   <div>
-                    <h3 className="font-semibold">{project.name}</h3>
+                    <h3 className="font-semibold text-card-foreground">{project.name}</h3>
                     <p className="text-sm text-muted-foreground">{project.period}</p>
                   </div>
                 </div>

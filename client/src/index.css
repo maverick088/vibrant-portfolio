@@ -4,26 +4,26 @@
 @tailwind utilities;
 
 :root {
-  /* Default theme - Warm Beige */
-  --background: #ede6d3;
-  --foreground: #1a1a1a;
-  --card: #ffffff;
-  --card-foreground: #1a1a1a;
-  --popover: #ffffff;
-  --popover-foreground: #1a1a1a;
-  --primary: #ff6b35;
-  --primary-foreground: #ffffff;
-  --secondary: #e8dcc4;
-  --secondary-foreground: #1a1a1a;
-  --muted: #b8a890;
-  --muted-foreground: #5a5a5a;
-  --accent: #ff6b35;
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --destructive-foreground: #ffffff;
-  --border: #d9ceb8;
-  --input: #d9ceb8;
-  --ring: #ff6b35;
+  /* Default theme - Warm Beige - HSL values for alpha support */
+  --background: 42 29% 86%;
+  --foreground: 0 0% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 10%;
+  --primary: 15 85% 59%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 42 26% 87%;
+  --secondary-foreground: 0 0% 10%;
+  --muted: 33 21% 66%;
+  --muted-foreground: 0 0% 35%;
+  --accent: 15 85% 59%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --border: 42 19% 82%;
+  --input: 42 19% 82%;
+  --ring: 15 85% 59%;
   
   /* Card colors - will be overridden by theme */
   --card-color-1: #b8d4b8;

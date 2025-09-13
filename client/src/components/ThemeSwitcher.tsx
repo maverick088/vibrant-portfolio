@@ -10,7 +10,7 @@ export default function ThemeSwitcher() {
     <div className="fixed bottom-8 left-8 z-50">
       {/* Theme Options */}
       {isOpen && (
-        <div className="absolute bottom-20 left-0 bg-card rounded-2xl shadow-2xl p-4 space-y-2 animate-fade-in">
+        <div className="absolute bottom-20 left-0 bg-card text-card-foreground rounded-2xl shadow-2xl p-4 space-y-2 animate-fade-in">
           {themes.map((t) => (
             <button
               key={t.name}
@@ -18,13 +18,13 @@ export default function ThemeSwitcher() {
                 setTheme(t);
                 setIsOpen(false);
               }}
-              className={`w-48 px-4 py-3 rounded-xl text-left hover:bg-secondary transition-colors flex items-center gap-3 ${
-                theme.name === t.name ? 'bg-secondary' : ''
+              className={`w-48 px-4 py-3 rounded-xl text-left hover:bg-secondary hover:text-secondary-foreground transition-colors flex items-center gap-3 ${
+                theme.name === t.name ? 'bg-secondary text-secondary-foreground' : 'text-card-foreground'
               }`}
               data-testid={`theme-${t.name.toLowerCase().replace(/\s+/g, '-')}`}
             >
               <div 
-                className="w-6 h-6 rounded-full border-2 border-foreground/20"
+                className="w-6 h-6 rounded-full border-2 border-border"
                 style={{ backgroundColor: t.primary }}
               />
               <span className="font-medium">{t.name}</span>
