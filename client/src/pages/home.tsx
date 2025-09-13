@@ -1,5 +1,6 @@
 import { Mail, MapPin, ExternalLink, User } from "lucide-react";
 import { Link } from "wouter";
+import { useState, useEffect } from "react";
 import ExperienceCarousel from "@/components/ExperienceCarousel";
 import ThemeSwitcher from "@/components/ThemeSwitcher";
 
@@ -42,6 +43,52 @@ const experiences = [
     index: 2,
   },
 ];
+
+// Typing Animation Component
+function TypingAnimation({ text, delay = 100, onComplete }: { text: string; delay?: number; onComplete?: () => void }) {
+  const [displayedText, setDisplayedText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [showCursor, setShowCursor] = useState(true);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, delay);
+
+      return () => clearTimeout(timeout);
+    } else {
+      // Animation complete
+      if (onComplete) onComplete();
+      
+      // Continue cursor blinking
+      const cursorInterval = setInterval(() => {
+        setShowCursor(prev => !prev);
+      }, 600);
+
+      return () => clearInterval(cursorInterval);
+    }
+  }, [currentIndex, text, delay, onComplete]);
+
+  // Cursor blinking during typing
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const cursorInterval = setInterval(() => {
+        setShowCursor(prev => !prev);
+      }, 500);
+
+      return () => clearInterval(cursorInterval);
+    }
+  }, [currentIndex, text.length]);
+
+  return (
+    <span>
+      {displayedText}
+      <span className={`inline-block w-1 h-16 md:h-20 lg:h-24 bg-primary ml-2 transition-opacity duration-200 ${showCursor ? 'opacity-100' : 'opacity-0'}`} />
+    </span>
+  );
+}
 
 // Skills with ratings
 const skills = [
@@ -140,8 +187,8 @@ export default function Home() {
             </a>
           </div>
 
-          <h1 className="text-6xl md:text-8xl lg:text-9xl heading-bold text-center mb-8 animate-fade-in">
-            ANUJ SINGH
+          <h1 className="text-6xl md:text-8xl lg:text-9xl heading-bold text-center mb-8 animate-fade-in" data-testid="hero-name">
+            <TypingAnimation text="ANUJ SINGH" delay={120} />
           </h1>
 
           {/* Colorful skill cards row */}
