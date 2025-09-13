@@ -74,29 +74,35 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   }
   
-  /* Experience cards with colorful backgrounds */
+  /* Experience cards with colorful backgrounds and animated border support */
   .card-green {
     background: var(--card-green);
+    --card-bg: var(--card-green);
   }
   
   .card-blue {
     background: var(--card-blue);
+    --card-bg: var(--card-blue);
   }
   
   .card-coral {
     background: var(--card-coral);
+    --card-bg: var(--card-coral);
   }
   
   .card-purple {
     background: var(--card-purple);
+    --card-bg: var(--card-purple);
   }
   
   .card-yellow {
     background: var(--card-yellow);
+    --card-bg: var(--card-yellow);
   }
   
   .card-mint {
     background: var(--card-mint);
+    --card-bg: var(--card-mint);
   }
   
   /* Bold heading style */
@@ -169,25 +175,7 @@
   animation: slideUp 0.8s ease-out;
 }
 
-/* Animated Border Gradient for Experience Cards */
-@keyframes borderGradient {
-  0% {
-    border-image: linear-gradient(45deg, rgba(255, 107, 53, 0.8), rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.8)) 1;
-  }
-  25% {
-    border-image: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.8), rgba(255, 107, 53, 0.2)) 1;
-  }
-  50% {
-    border-image: linear-gradient(225deg, rgba(255, 107, 53, 0.8), rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.8)) 1;
-  }
-  75% {
-    border-image: linear-gradient(315deg, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.8), rgba(255, 107, 53, 0.2)) 1;
-  }
-  100% {
-    border-image: linear-gradient(45deg, rgba(255, 107, 53, 0.8), rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.8)) 1;
-  }
-}
-
+/* Animated Border Shimmer for Experience Cards */
 @keyframes borderShimmer {
   0% {
     background-position: -200% 0;
@@ -199,31 +187,29 @@
 
 .animate-border-gradient {
   position: relative;
-  border: 2px solid transparent;
-  background: linear-gradient(var(--card-bg), var(--card-bg)) padding-box,
-              linear-gradient(45deg, rgba(255, 107, 53, 0.6), rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.6)) border-box;
+  z-index: 0;
+  overflow: visible;
 }
 
 .animate-border-gradient::before {
   content: '';
   position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
+  inset: -3px;
   background: linear-gradient(45deg, 
     rgba(255, 107, 53, 0.8), 
-    rgba(255, 107, 53, 0.2), 
-    rgba(255, 107, 53, 0.8), 
-    rgba(255, 107, 53, 0.2),
-    rgba(255, 107, 53, 0.8)
+    rgba(255, 205, 86, 0.6),
+    rgba(135, 206, 235, 0.7),
+    rgba(255, 107, 53, 0.8),
+    rgba(255, 205, 86, 0.6)
   );
-  background-size: 200% 200%;
+  background-size: 300% 300%;
   border-radius: inherit;
   z-index: -1;
-  animation: borderShimmer 3s linear infinite;
+  animation: borderShimmer 4s ease-in-out infinite;
+  opacity: 0.8;
 }
 
 .animate-border-gradient:hover::before {
-  animation-duration: 1.5s;
+  animation-duration: 2s;
+  opacity: 1;
 }
